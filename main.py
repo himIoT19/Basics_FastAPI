@@ -16,10 +16,25 @@ class ModelName(str, Enum):
 
 him = FastAPI()
 
+# When we declare other function parameters that are not part of the path parameters, they are automatically interpreted as "query" parameters.
+fake_items_db = [{"item_name": "Foo"}, {"item_name": "Bar"}, {"item_name": "Baz"}]
+
 
 @him.get("/")
 async def root():
     return {"message": "Hello Himanshu"}
+
+
+@him.get("/items/")
+async def read_item(skip: int = 0, limit: int = 10):    # The query is the set of key-value pairs that go after the ? in a URL, separated by & characters,
+    # eg: http://127.0.0.1:8055/items/?skip=0&limit=10
+    """
+
+    :param skip: with a value of 0
+    :param limit: with a value of 10
+    :return:
+    """
+    return fake_items_db[skip: skip + limit]
 
 
 @him.get("/items/{item_id}")
