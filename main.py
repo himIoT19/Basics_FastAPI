@@ -26,7 +26,7 @@ async def root():
 
 
 @him.get("/items/")
-async def read_item(skip: int = 0, limit: int = 10):    # The query is the set of key-value pairs that go after the ? in a URL, separated by & characters,
+async def read_item(skip: int = 0, limit: int = 10):  # The query is the set of key-value pairs that go after the ? in a URL, separated by & characters,
     # eg: http://127.0.0.1:8055/items/?skip=0&limit=10
     """
 
@@ -38,8 +38,14 @@ async def read_item(skip: int = 0, limit: int = 10):    # The query is the set o
 
 
 @him.get("/items/{item_id}")
-async def read_item(item_id: int):
-    return {"item_id": item_id}
+async def read_item(item_id: str, q: str | None = None):  # The same way, we can declare optional query parameters, by setting their default to None
+    # eg: http://127.0.0.1:8000/items/1?q=python
+    return {"item_id": item_id, "q": q} if q else {"item_id": item_id}
+
+
+# @him.get("/items/{item_id}")
+# async def read_item(item_id: int):
+#     return {"item_id": item_id}
 
 
 @him.get("/users/{user_id}")
