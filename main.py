@@ -37,18 +37,37 @@ async def read_item(skip: int = 0, limit: int = 10):  # The query is the set of 
     return fake_items_db[skip: skip + limit]
 
 
-@him.get("/items/{item_id}")
-async def read_item(item_id: str, q: str | None = None, short: bool = False):  # In this case, if we go to:
-    # eg: http://127.0.0.1:8000/items/foo?short=1 or http://127.0.0.1:8000/items/foo?short=True or http://127.0.0.1:8000/items/foo?short=true
-    # or http://127.0.0.1:8000/items/foo?short=on or http://127.0.0.1:8000/items/foo?short=yes
-    # or any other case variation (uppercase, first letter in uppercase, etc.),
-    # your function will see the parameter short with a bool value of True. Otherwise, as False.
-    item = {"item_id": item_id}
+@him.get("/users/{user_id}/items/{item_id}")
+async def read_user_item(user_id: int, item_id: str, q: str | None = None, short: bool = False):
+    """
+    We can declare multiple path parameters and query parameters at the same time, FastAPI knows which is which.
+    And we don't have to declare them in any specific order. They will be detected by name
+    :param user_id:
+    :param item_id:
+    :param q:
+    :param short:
+    :return:
+    """
+    item = {"item_id": item_id, "owner_id": user_id}
     if q:
         item["q"] = q
     if not short:
         item["description"] = "This is an amazing item that has a long description"
     return item
+
+
+# @him.get("/items/{item_id}")
+# async def read_item(item_id: str, q: str | None = None, short: bool = False):  # In this case, if we go to:
+#     # eg: http://127.0.0.1:8000/items/foo?short=1 or http://127.0.0.1:8000/items/foo?short=True or http://127.0.0.1:8000/items/foo?short=true
+#     # or http://127.0.0.1:8000/items/foo?short=on or http://127.0.0.1:8000/items/foo?short=yes
+#     # or any other case variation (uppercase, first letter in uppercase, etc.),
+#     # your function will see the parameter short with a bool value of True. Otherwise, as False.
+#     item = {"item_id": item_id}
+#     if q:
+#         item["q"] = q
+#     if not short:
+#         item["description"] = "This is an amazing item that has a long description"
+#     return item
 
 
 # @him.get("/items/{item_id}")
