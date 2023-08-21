@@ -1,5 +1,4 @@
 from enum import Enum
-
 from fastapi import FastAPI
 
 
@@ -30,28 +29,42 @@ async def read_item(skip: int = 0, limit: int = 10):  # The query is the set of 
     # eg: http://127.0.0.1:8055/items/?skip=0&limit=10
     """
 
-    :param skip: with a value of 0
-    :param limit: with a value of 10
+    :param skip: query param with a value of 0
+    :param limit: query param with a value of 10
     :return:
     """
     return fake_items_db[skip: skip + limit]
 
 
 @him.get("/items/{item_id}")
-async def read_user_item(item_id: str, needy: str):
+async def read_user_item(item_id: str, needy: str, skip: int = 0, limit: int | None = None):
     """
-    When we declare a default value for non-path parameters (for now, we have only seen query parameters), then it is not required.
-    If we don't want to add a specific value but just make it optional, set the default as None.
-    But when we want to make a query parameter required, we can just not declare any default value
-    eg: Here the query parameter needy is a required query parameter of type str.
-    If you open in your browser a URL like:
-    http://127.0.0.1:8000/items/foo-item --> error(As 'needy' is a required query parameter, you would need to set it in the URL)
-    http://127.0.0.1:8000/items/foo-item?needy=sooooneedy --> Will work
-    :param item_id:
-    :param needy:
+    We can define some query parameters as required, some as having a default value, and some entirely optional, eg:
+    :param item_id: path parameter str
+    In this case, there are 3 query parameters
+    :param needy: a required str
+    :param skip: an int with a default value of 0
+    :param limit: an optional int
     :return:
     """
-    return {"item_id": item_id, "needy": needy}
+    return {"item_id": item_id, "needy": needy, "skip": skip, "limit": limit}
+
+
+# @him.get("/items/{item_id}")
+# async def read_user_item(item_id: str, needy: str):
+#     """
+#     When we declare a default value for non-path parameters (for now, we have only seen query parameters), then it is not required.
+#     If we don't want to add a specific value but just make it optional, set the default as None.
+#     But when we want to make a query parameter required, we can just not declare any default value
+#     eg: Here the query parameter needy is a required query parameter of type str.
+#     If you open in your browser a URL like:
+#     http://127.0.0.1:8000/items/foo-item --> error(As 'needy' is a required query parameter, you would need to set it in the URL)
+#     http://127.0.0.1:8000/items/foo-item?needy=sooooneedy --> Will work
+#     :param item_id:
+#     :param needy:
+#     :return:
+#     """
+#     return {"item_id": item_id, "needy": needy}
 
 
 # @him.get("/users/{user_id}/items/{item_id}")
