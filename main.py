@@ -37,23 +37,40 @@ async def read_item(skip: int = 0, limit: int = 10):  # The query is the set of 
     return fake_items_db[skip: skip + limit]
 
 
-@him.get("/users/{user_id}/items/{item_id}")
-async def read_user_item(user_id: int, item_id: str, q: str | None = None, short: bool = False):
+@him.get("/items/{item_id}")
+async def read_user_item(item_id: str, needy: str):
     """
-    We can declare multiple path parameters and query parameters at the same time, FastAPI knows which is which.
-    And we don't have to declare them in any specific order. They will be detected by name
-    :param user_id:
+    When we declare a default value for non-path parameters (for now, we have only seen query parameters), then it is not required.
+    If we don't want to add a specific value but just make it optional, set the default as None.
+    But when we want to make a query parameter required, we can just not declare any default value
+    eg: Here the query parameter needy is a required query parameter of type str.
+    If you open in your browser a URL like:
+    http://127.0.0.1:8000/items/foo-item --> error(As 'needy' is a required query parameter, you would need to set it in the URL)
+    http://127.0.0.1:8000/items/foo-item?needy=sooooneedy --> Will work
     :param item_id:
-    :param q:
-    :param short:
+    :param needy:
     :return:
     """
-    item = {"item_id": item_id, "owner_id": user_id}
-    if q:
-        item["q"] = q
-    if not short:
-        item["description"] = "This is an amazing item that has a long description"
-    return item
+    return {"item_id": item_id, "needy": needy}
+
+
+# @him.get("/users/{user_id}/items/{item_id}")
+# async def read_user_item(user_id: int, item_id: str, q: str | None = None, short: bool = False):
+#     """
+#     We can declare multiple path parameters and query parameters at the same time, FastAPI knows which is which.
+#     And we don't have to declare them in any specific order. They will be detected by name
+#     :param user_id:
+#     :param item_id:
+#     :param q:
+#     :param short:
+#     :return:
+#     """
+#     item = {"item_id": item_id, "owner_id": user_id}
+#     if q:
+#         item["q"] = q
+#     if not short:
+#         item["description"] = "This is an amazing item that has a long description"
+#     return item
 
 
 # @him.get("/items/{item_id}")
