@@ -1,6 +1,8 @@
 from enum import Enum
 from fastapi import FastAPI
 
+from him.models.item import Item
+
 
 class ModelName(str, Enum):
     """
@@ -34,6 +36,16 @@ async def read_item(skip: int = 0, limit: int = 10):  # The query is the set of 
     :return:
     """
     return fake_items_db[skip: skip + limit]
+
+
+@him.post("/items/")
+async def create_item(item: Item):
+    """
+    To add it to our path operation, declare 'item' the same way we declared path and query parameters, and and declare its type as the model we created, Item
+    :param item: its type as the model we created, Item --> (him/models/item.py)
+    :return:
+    """
+    return item
 
 
 @him.get("/items/{item_id}")
