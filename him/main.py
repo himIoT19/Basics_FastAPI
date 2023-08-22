@@ -41,11 +41,25 @@ async def read_item(skip: int = 0, limit: int = 10):  # The query is the set of 
 @him.post("/items/")
 async def create_item(item: Item):
     """
-    To add it to our path operation, declare 'item' the same way we declared path and query parameters, and and declare its type as the model we created, Item
+    Inside of the function, you can access all the attributes of the model object directly
     :param item: its type as the model we created, Item --> (him/models/item.py)
     :return:
     """
-    return item
+    item_dict = item.model_dump()  # since, item_dict = item.dict() --> deprecated
+    if item.tax:
+        price_with_tax = item.price + item.tax
+        item_dict.update({"price_with_tax": price_with_tax})
+    return item_dict
+
+
+# @him.post("/items/")
+# async def create_item(item: Item):
+#     """
+#     To add it to our path operation, declare 'item' the same way we declared path and query parameters, and and declare its type as the model we created, Item
+#     :param item: its type as the model we created, Item --> (him/models/item.py)
+#     :return:
+#     """
+#     return item
 
 
 @him.get("/items/{item_id}")
